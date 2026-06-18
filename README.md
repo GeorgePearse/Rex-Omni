@@ -82,19 +82,39 @@
 
 ## 1. Installation ⛳️
 
+The whole project is managed with [uv](https://docs.astral.sh/uv/). If you don't
+have it yet:
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+Then clone and sync. `uv` creates the virtual environment, picks the correct
+CUDA build of PyTorch, and installs `rex_omni` in editable mode automatically:
+
 ```bash
 git clone https://github.com/IDEA-Research/Rex-Omni.git
 cd Rex-Omni
-conda create -n rexomni python=3.10 -y
-conda activate rexomni
-pip install torch==2.7.0 torchvision --index-url https://download.pytorch.org/whl/cu128
-pip install -r requirements.txt
-pip install -v -e .
+uv sync
 ```
+
+Optional extras (combine as needed):
+
+```bash
+uv sync --extra demo          # Gradio web demo (app.py)
+uv sync --extra vllm          # high-throughput vLLM backend
+uv sync --extra flash         # FlashAttention kernels (needs a CUDA toolchain)
+uv sync --extra finetuning    # SFT + GRPO fine-tuning stack
+uv sync --all-extras          # everything at once
+```
+
+> PyTorch is pulled from the CUDA 12.8 wheel index (configured in
+> `pyproject.toml`). To target a different CUDA version, edit the
+> `[[tool.uv.index]]` URL.
 
 Test Installation
 ```bash
-CUDA_VISIBLE_DEVICES=1 python tutorials/detection_example/detection_example.py
+CUDA_VISIBLE_DEVICES=1 uv run python tutorials/detection_example/detection_example.py
 ```
 
 If the installation is successful, you will find a visualization of the detection results at `tutorials/detection_example/test_images/cafe_visualize.jpg`
@@ -223,11 +243,13 @@ We provide an interactive Gradio demo that allows you to test all Rex-Omni capab
 
 ### Quick Start
 ```bash
+# Install the demo dependencies first: uv sync --extra demo
+
 # Launch the demo
-CUDA_VISIBLE_DEVICES=0 python app.py --model_path IDEA-Research/Rex-Omni
+CUDA_VISIBLE_DEVICES=0 uv run python app.py --model_path IDEA-Research/Rex-Omni
 
 # With custom settings
-CUDA_VISIBLE_DEVICES=0 python app.py \
+CUDA_VISIBLE_DEVICES=0 uv run python app.py \
     --model_path IDEA-Research/Rex-Omni \
     --backend vllm \
     --server_name 0.0.0.0 \

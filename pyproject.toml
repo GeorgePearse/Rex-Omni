@@ -1,0 +1,87 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "rex_omni"
+version = "1.0.0"
+description = "A high-level wrapper for Rex-Omni multimodal language model supporting various vision tasks"
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
+license = { file = "LICENSE" }
+authors = [{ name = "IDEA Research, Qing Jiang", email = "jiangqing@idea.edu.cn" }]
+dependencies = [
+    "matplotlib==3.10.6",
+    "numpy==1.26.4",
+    "Pillow==10.4.0",
+    "qwen_vl_utils==0.0.14",
+    "transformers==4.51.3",
+    "accelerate==1.10.1",
+    "pydantic==2.10.6",
+    "torch==2.7.0",
+    "torchvision==0.22.0",
+]
+
+[project.optional-dependencies]
+# Interactive Gradio demo (app.py)
+demo = [
+    "gradio==4.44.1",
+    "gradio_image_prompter==0.1.0",
+]
+# High-throughput inference backend
+vllm = [
+    "vllm==0.9.1 ; sys_platform != 'win32'",
+    "triton ; sys_platform != 'win32'",
+    "triton-windows ; sys_platform == 'win32'",
+]
+# FlashAttention kernels (requires a CUDA toolchain at build time)
+flash = [
+    "flash-attn==2.7.4.post1",
+]
+# SFT + GRPO fine-tuning stack
+finetuning = [
+    "pycocotools==2.0.10",
+    "shapely==2.1.2",
+    "gradio_bbox_annotator==0.1.1",
+    "mmengine==0.10.7",
+    "deepspeed==0.16.7",
+    "ujson==5.11.0",
+    "wandb==0.22.2",
+    "liger-kernel==0.6.2",
+    "mpi4py==4.1.1",
+    "datasets==4.3.0",
+    "omegaconf==2.3.0",
+    "tensordict==0.10.0",
+    "codetiming==1.4.0",
+    "torchdata==0.11.0",
+    "tensorboard==2.20.0",
+    "ray[default]",
+]
+
+[project.urls]
+Homepage = "https://rex-omni.github.io/"
+Repository = "https://github.com/IDEA-Research/Rex-Omni"
+Paper = "https://arxiv.org/abs/2510.12798"
+
+[tool.hatch.build.targets.wheel]
+packages = ["rex_omni"]
+
+# --- uv configuration -------------------------------------------------------
+# Pull torch / torchvision from the CUDA 12.8 wheel index instead of PyPI.
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu128" }
+torchvision = { index = "pytorch-cu128" }
+
+# flash-attn cannot be built in an isolated env; it needs torch present at
+# build time. Provide those build deps explicitly so `uv sync --extra flash`
+# works without manual pre-installation.
+[tool.uv]
+no-build-isolation-package = ["flash-attn"]
+
+[tool.uv.extra-build-dependencies]
+flash-attn = ["torch", "setuptools", "psutil"]

@@ -24,19 +24,19 @@ We provide code for both SFT and GRPO finetuning of the Rex-Omni model.
 
 ## Installation
 
+The fine-tuning stack is installed as the `finetuning` extra of the root
+project (managed with [uv](https://docs.astral.sh/uv/)):
+
 ```bash
-# Install Rex-Omni, skip if you have already installed it
-conda create -n rexomni -m python=3.10
-pip install torch==2.6.0 torchvision==0.21.0 --index-url https://download.pytorch.org/whl/cu124
 git clone https://github.com/IDEA-Research/Rex-Omni.git
 cd Rex-Omni
-pip install -v -e .
-
-# Install required dependencies
-cd finetuning
-pip install -v -e .
-
+uv sync --extra finetuning
 ```
+
+This installs Rex-Omni plus every fine-tuning dependency (DeepSpeed, vLLM-free
+training utils, Liger kernels, etc.) into a single environment. Run the
+training scripts below with `uv run` (e.g. `uv run python train.py ...`) so they
+use that environment.
 
 ---
 

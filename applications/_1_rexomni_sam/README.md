@@ -17,11 +17,11 @@ Combine **Rex-Omni's** language-driven detection with **SAM's** precise segmenta
 ## 📋 Requirements
 
 ```bash
-# Install Rex-Omni
-pip install -e .
+# Install Rex-Omni (from the repo root)
+uv sync
 
-# Install SAM
-pip install git+https://github.com/facebookresearch/segment-anything.git
+# Install SAM into the same environment
+uv pip install git+https://github.com/facebookresearch/segment-anything.git
 
 # Download SAM checkpoint (choose one)
 wget https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth  # Highes(~375MB)

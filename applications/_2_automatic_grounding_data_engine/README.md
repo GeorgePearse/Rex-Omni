@@ -18,9 +18,9 @@ Automatically generate phrase grounding annotations from image captions using sp
 ## 📋 Requirements
 
 ```bash
-# Install Spacy
-pip install spacy
-python -m spacy download en_core_web_sm
+# Install Spacy into the project environment
+uv pip install spacy
+uv run python -m spacy download en_core_web_sm
 ```
 
 ## 🚀 Usage

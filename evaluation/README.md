@@ -5,8 +5,7 @@ This guide shows how to download evaluation data, unpack images, and run Rex-Omn
 ### 1 Install FastEvaluate (required for COCO/LVIS metrics)
 
 ```bash
-cd evaluation/fastevaluate
-pip install -e .
+uv pip install -e evaluation/fastevaluate
 ```
 
 ### 2 Download datasets
